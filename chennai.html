@@ -1,372 +1,160 @@
-<!doctype html>
-<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Chennai | Flood Resilience & Access</title>
-  <meta name="description" content="Scrollytelling page that explores network accessibility under a 1-in-100 flood scenario, boat access points, and priority clusters (7 & 9)."/>
-  <!-- Libraries (no API keys) -->
-  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet"/>
-  <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
-  <script src="https://unpkg.com/vega@5"></script>
-  <script src="https://unpkg.com/vega-lite@5"></script>
-  <script src="https://unpkg.com/vega-embed@6"></script>
-
+  <title>Severed Accessibility and Urban Resilience</title>
   <style>
-    :root{
-      --bg:#0b0f13; --fg:#e8eef6; --muted:#a5b4c3; --accent:#61b0ff; --accent2:#86efac;
-      --panel:#121821; --panel2:#0f141c; --shadow:0 10px 30px rgba(0,0,0,.35);
+    /* Tipografías similares al estilo de noticia */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      color: #fdf8f6;
+      font-family: "Helvetica", "Helvetica", "serif";
+      line-height: 1.6;
     }
-    html,body{margin:0; padding:0; background:var(--bg); color:var(--fg); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";}
-    a{color:var(--accent)}
-    .wrap{max-width:1100px; margin:0 auto; padding:24px}
-    header.hero{padding:12vh 0 6vh}
-    header .kicker{letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; font-size:.9rem}
-    header h1{margin:.3em 0 .15em; font-size:clamp(2rem, 4.5vw, 3.2rem); line-height:1.05}
-    header p.deck{font-size:clamp(1.05rem, 1.5vw, 1.2rem); color:var(--muted); max-width:68ch}
-    .byline{margin-top:.75rem; font-size:.95rem; color:var(--muted)}
-    .scrolly{display:grid; grid-template-columns: min(58vw, 640px) 1fr; gap:22px; align-items:start; margin:4rem 0}
-    .sticky{position:sticky; top:12px; height:75vh; border-radius:14px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden}
-    #map{width:100%; height:100%}
-    .article{position:relative}
-    .step{background:var(--panel2); border-radius:14px; padding:16px 18px; margin:0 0 16px; box-shadow:var(--shadow)}
-    .step h3{margin:.2em 0 .35em; font-size:1.15rem}
-    .step p{margin:.35em 0; color:var(--muted)}
-    .legend{display:flex; gap:10px; align-items:center; position:absolute; z-index:5; left:12px; bottom:12px; background:rgba(10,14,19,.75); padding:8px 10px; border-radius:10px; backdrop-filter: blur(4px); font-size:.9rem}
-    .legend i{display:inline-block; width:14px; height:14px; border-radius:3px}
-    .pill{display:inline-block; padding:2px 8px; border-radius:999px; background:#1a2230; color:#bcd; font-size:.8rem}
-    /* Chart section */
-    .graphic{position:sticky; top:12px; height:60vh; border-radius:14px; background:var(--panel); box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; padding:10px}
-    #chart{width:100%; height:100%}
-    footer{margin:6rem 0 2rem; color:#91a3b6; font-size:.95rem}
-    .note{font-size:.92rem; color:#9fb0c1}
-    .controls{position:absolute; right:12px; bottom:12px; background:rgba(10,14,19,.75); padding:8px 10px; border-radius:10px; backdrop-filter: blur(4px); display:flex; gap:8px; align-items:center}
-    select{background:#0c1118; color:var(--fg); border:1px solid #1b2532; padding:6px 8px; border-radius:8px}
-    @media (max-width: 980px){
-      .scrolly{grid-template-columns: 1fr; gap:12px}
-      .sticky, .graphic{height:55vh}
+
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Pequeño kicker arriba del título */
+    .kicker {
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #e2e0e0;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    /* Título principal */
+    header.hero h1 {
+      font-size: clamp(1.8rem, 4vw, 1.8rem);
+      line-height: 1.2;
+      font-weight: 800;
+      text-align: center;
+      margin: 0 0 1rem;
+    }
+
+    /* Abstract con estilo similar a subtítulo */
+    header.hero p.deck {
+      font-size: 1.05rem;
+      color: #e2e1e4;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Autores / byline */
+    .byline {
+      font-size: 1rem;
+      color: #ffff00;
+      text-align: center;
+      margin-bottom: 3rem;
+      font-weight: 600;
+    }
+
+    /* Method / byline */
+    .method {
+      font-size: 0.7rem;
+      color: #ffff00;
+      text-align: center;
+      margin-bottom: 3rem;
+      font-weight: 50;
+    }    
+
+    /* Texto del cuerpo */
+    .content p {
+      font-size: 1rem;
+      margin: 1.2rem 0;
+      text-align: justify;
+      font-weight: 200;
+    }
+
+    /* Pie de página */
+    .source p {
+      font-size: 0.6rem;
+      margin: 1.2rem 0;
+      text-align: center;
+      font-weight: 200;
+    }
+
+    /* Negrita en ABSTRACT */
+    .content strong {
+      font-weight: 700;
     }
   </style>
 </head>
-<body>
 
+<body>
   <div class="wrap">
     <header class="hero">
-      <div class="kicker">Risk • Mobility • Climate</div>
-      <h1>When Streets Turn to Rivers</h1>
-      <p class="deck">
-        What happens to access when a 1-in-100 flood hits Chennai? This scrollable story blends street-network
-        metrics (NAIN/NACH), flood scenarios, and the role of boat pickup points and shelters. It highlights two
-        priority clusters where vulnerability and exposure overlap—and where safe access can be most decisive.
-      </p>
-      <div class="byline">By Daniela Reséndiz • Methods: Space Syntax, hydraulic validation, and field constraints</div>
+      <div class="kicker">Risk flood • Mobility • Climate adaptation</div>
+      <h1>
+        Severed Accessibility and Urban Resilience:<br>
+        A multi-scalar analysis of flood risk in Chennai, India
+      </h1>
+      <div class="byline">
+        By Daniela Reséndiz
+      </div>
+      <div class="method">
+        Methods: Network analysis, machine learning, geospatial analysis, spatial statistics, hydraulic validation, and field constraints
+      </div>      
     </header>
 
-    <!-- ========== SCROLLY #1: STICKY MAP + STEPS ========== -->
-    <section class="scrolly" id="scrolly-map">
-      <figure class="sticky">
-        <div id="map" role="img" aria-label="Interactive map of street accessibility and flood scenario"></div>
-        <div class="legend" aria-hidden="true">
-          <span><i style="background:#e2e8f0"></i> Low</span>
-          <span><i style="background:#60a5fa"></i> Medium</span>
-          <span><i style="background:#2563eb"></i> High</span>
-        </div>
-        <div class="controls">
-          <label class="pill">Metric</label>
-          <select id="metricSel" title="Metric">
-            <option value="NAIN">NAIN</option>
-            <option value="NACH">NACH</option>
-          </select>
-          <label class="pill">Scenario</label>
-          <select id="scenarioSel" title="Scenario">
-            <option value="normal">Normal</option>
-            <option value="flood">Flood (T=100)</option>
-          </select>
-        </div>
-      </figure>
+    <div class="content">
+        <p class="deck">
+        <strong>Flooding is a rapidly intensifying urban challenge,
+        disrupting essential services and exposing structural inequalities
+        across cities worldwide.</strong> While existing frameworks address either ecological resilience or spatial configuration, few capture how flood events dynamically alter accessibility—disconnecting populations from shelters, services, or safe mobility routes.</p>
 
-      <article class="article">
-        <div class="step" data-action="view" data-scenario="normal" data-metric="NAIN">
-          <h3>Baseline: ordinary day network structure</h3>
-          <p>Street integration (NAIN) reveals the backbone that concentrates through-movement. Under normal conditions, activity
-             clusters along these continuous corridors.</p>
-          <p class="note">Hint: use the controls to switch to NACH (choice) if you want to emphasise local decision points.</p>
-        </div>
+      <p>This study introduces a spatial methodology that models accessibility loss under extreme flood conditions, integrating a 100-year return period scenario with network-based spatial analysis. Applied to Chennai, the approach overlays flood impact on road networks, land use, and infrastructure to assess where functional accessibility collapses. A clustering analysis further identifies priority zones for safe shelter allocation and evacuation planning.</p>
 
-        <div class="step" data-action="view" data-scenario="flood" data-metric="NAIN">
-          <h3>Flood disrupts continuity</h3>
-          <p>Under a 1-in-100 flood, segments drop in accessibility as links are cut. Notice the eastern periphery collapsing first.</p>
-        </div>
+      <p>Results show that accessibility degradation is spatially uneven. Compact urban forms retain greater connectivity under stress, while dispersed or fragmented areas become structurally isolated. Key corridors and intervention areas are mapped both at local and metropolitan scales, offering actionable entry points for adaptive planning.</p>
 
-        <div class="step" data-action="focus" data-bbox="80.16,12.96,80.33,13.12" data-scenario="flood" data-metric="NAIN">
-          <h3>Priority cluster <strong>7</strong></h3>
-          <p>A dense low-lying area where cuts compound. Emergency routing requires hybrid land-water solutions.</p>
-        </div>
+      <p>The method reframes resilience not as physical resistance to flooding, but as the preservation of spatial connection under disruption. It is transferable to diverse urban contexts and leverages open-access spatial and environmental data, enabling scalable diagnostics without relying on intensive modelling or proprietary inputs.</p>
 
-        <div class="step" data-action="focus" data-bbox="80.20,12.90,80.40,13.02" data-scenario="flood" data-metric="NACH">
-          <h3>Priority cluster <strong>9</strong></h3>
-          <p>Choice (NACH) falls sharply near junctions abutting canals. Strategic staging of boats reduces isolation.</p>
-        </div>
-
-        <div class="step" data-action="toggle-boats">
-          <h3>Boat pickup points</h3>
-          <p>Boat points provide redundancy. The histogram below breaks down their access profiles.</p>
-        </div>
-
-        <div class="step" data-action="toggle-shelters">
-          <h3>Shelters within walking distance</h3>
-          <p>How many residents can reach safe shelters within 10–400 m under flood? Bar charts ahead summarise each band.</p>
-        </div>
-      </article>
-    </section>
-
-    <!-- ========== SCROLLY #2: STICKY CHARTS + STEPS ========== -->
-    <section class="scrolly" id="scrolly-charts" style="margin-top:5rem">
-      <figure class="graphic">
-        <div id="chart" aria-label="Interactive charts"></div>
-      </figure>
-      <article class="article">
-        <div class="step" data-chart="boats">
-          <h3>Boat access distribution</h3>
-          <p>The distribution of NAIN (r=800 m) for boat points. A right-shift suggests better continuity to reach pick-ups.</p>
-        </div>
-        <div class="step" data-chart="boats-compare">
-          <h3>Normal vs flood (boat points)</h3>
-          <p>Compare how the flood scenario shifts boat point accessibility. Expect a thinning of the high-access tail.</p>
-        </div>
-        <div class="step" data-chart="shelters">
-          <h3>Shelter reach bands</h3>
-          <p>Counts of residents or blocks within 10–400 m to shelters under flood conditions, by band (10–50–100–200–400 m).</p>
-        </div>
-      </article>
-    </section>
-
-    <footer>
-      <p><strong>Data & fields</strong> (put your files in <code>/data</code>):</p>
-      <ul>
-        <li><code>data/streets_flood.geojson</code> — Line features with: <code>state</code> = <em>normal|flood</em>, and numeric fields <code>NAIN_normal</code>, <code>NAIN_flood</code>, <code>NACH_normal</code>, <code>NACH_flood</code>.</li>
-        <li><code>data/boats.geojson</code> — Points with <code>NAIN_r800_normal</code>, <code>NAIN_r800_flood</code>.</li>
-        <li><code>data/shelters.geojson</code> — Points with <code>dist_m</code> (distance to nearest block centroid) and optional <code>band</code> (10, 50, 100, 200, 400).</li>
-        <li><code>data/clusters.geojson</code> — Polygons with <code>cluster</code> (7, 9, …).</li>
-      </ul>
-      <p class="note">Design is key-less and fully static (works on GitHub Pages). You can refine colors, fonts, and copy freely.</p>
-    </footer>
+      <p>By shifting focus from exposure to accessibility, the study offers a novel framework for anticipating the lived impacts of climate hazards—and designing cities that can maintain life-saving accessibility in times of crisis.</p>
+    </div>
   </div>
-
-  <script>
-    // ---------- Utilities ----------
-    const qs = (sel, el=document)=>el.querySelector(sel);
-    const qsa = (sel, el=document)=>[...el.querySelectorAll(sel)];
-    const parseBBox = s => s.split(',').map(Number); // [minX,minY,maxX,maxY]
-
-    // ---------- MAP INIT ----------
-    const map = new maplibregl.Map({
-      container: "map",
-      style: "https://demotiles.maplibre.org/style.json",
-      center: [80.27, 13.07],
-      zoom: 10
-    });
-    map.addControl(new maplibregl.NavigationControl(), "top-right");
-
-    // Data holders
-    let G = { streets:null, boats:null, shelters:null, clusters:null };
-
-    async function loadData(){
-      const [a,b,c,d] = await Promise.all([
-        fetch("data/streets_flood.geojson").then(r=>r.json()),
-        fetch("data/boats.geojson").then(r=>r.json()),
-        fetch("data/shelters.geojson").then(r=>r.json()),
-        fetch("data/clusters.geojson").then(r=>r.json()),
-      ]);
-      G.streets=a; G.boats=b; G.shelters=c; G.clusters=d;
-    }
-
-    function addLayers(){
-      map.addSource("streets",{ type:"geojson", data:G.streets });
-      map.addLayer({
-        id:"streets-line",
-        type:"line",
-        source:"streets",
-        paint:{
-          "line-width": ["interpolate",["linear"],["zoom"], 9,0.4, 12,0.9, 14,1.6],
-          "line-color": ["step", ["get","__val"], "#e2e8f0", 0.33, "#60a5fa", 0.66, "#2563eb"],
-          "line-opacity": ["case", ["==",["get","state"], "flood"], 1, 0.45]
-        },
-        filter:["==",["get","state"],"normal"]
-      });
-
-      map.addSource("clusters",{ type:"geojson", data:G.clusters });
-      map.addLayer({
-        id:"clusters-fill",
-        type:"fill",
-        source:"clusters",
-        paint:{
-          "fill-color":["match",["get","cluster"],7,"#10b981",9,"#34d399","#93c5fd"],
-          "fill-opacity":0.25
-        }
-      });
-
-      map.addSource("boats",{ type:"geojson", data:G.boats });
-      map.addLayer({ id:"boats", type:"circle", source:"boats",
-        paint:{ "circle-radius":4, "circle-color":"#ef4444", "circle-stroke-color":"#0b0f13", "circle-stroke-width":0.6 },
-        layout:{ "visibility":"none" }
-      });
-
-      map.addSource("shelters",{ type:"geojson", data:G.shelters });
-      map.addLayer({ id:"shelters", type:"circle", source:"shelters",
-        paint:{ "circle-radius":4, "circle-color":"#f59e0b", "circle-stroke-color":"#0b0f13", "circle-stroke-width":0.6 },
-        layout:{ "visibility":"none" }
-      });
-
-      // initial metric/scenario
-      updateMetricScenario();
-    }
-
-    function updateMetricScenario(){
-      const metric = qs("#metricSel").value;     // "NAIN" | "NACH"
-      const scenario = qs("#scenarioSel").value; // "normal" | "flood"
-      const field = `${metric}_${scenario}`;
-
-      // compute __val on the fly for styling
-      const features = G.streets.features.map(f=>{
-        f.properties.__val = Number(f.properties[field] ?? 0);
-        return f;
-      });
-      map.getSource("streets").setData({ type:"FeatureCollection", features });
-
-      // toggle filter by state
-      map.setFilter("streets-line", ["==",["get","state"], scenario]);
-
-      // recolor expression
-      map.setPaintProperty("streets-line", "line-color",
-        ["step", ["get","__val"], "#e2e8f0", 0.33, "#60a5fa", 0.66, "#2563eb"]
-      );
-    }
-
-    qs("#metricSel").addEventListener("change", updateMetricScenario);
-    qs("#scenarioSel").addEventListener("change", updateMetricScenario);
-
-    // ---------- SCROLL TRIGGERS (MAP) ----------
-    function fitToBBox(b){
-      const [minX,minY,maxX,maxY] = b;
-      map.fitBounds([[minX,minY],[maxX,maxY]], { padding: 40, duration: 900 });
-    }
-    function toggleLayer(id, show=true){
-      map.setLayoutProperty(id, "visibility", show ? "visible" : "none");
-    }
-
-    function handleMapStep(step){
-      const action = step.dataset.action;
-      if(action==="view"){
-        if(step.dataset.metric) qs("#metricSel").value = step.dataset.metric;
-        if(step.dataset.scenario) qs("#scenarioSel").value = step.dataset.scenario;
-        updateMetricScenario();
-      }
-      if(action==="focus" && step.dataset.bbox){
-        if(step.dataset.metric) qs("#metricSel").value = step.dataset.metric;
-        if(step.dataset.scenario) qs("#scenarioSel").value = step.dataset.scenario;
-        updateMetricScenario();
-        fitToBBox(parseBBox(step.dataset.bbox));
-      }
-      if(action==="toggle-boats"){
-        toggleLayer("boats", true);
-        toggleLayer("shelters", false);
-      }
-      if(action==="toggle-shelters"){
-        toggleLayer("boats", false);
-        toggleLayer("shelters", true);
-      }
-    }
-
-    // ---------- CHARTS ----------
-    let currentChart = "boats";
-    async function drawChart(kind="boats"){
-      currentChart = kind;
-      if(kind==="boats"){
-        const values = G.boats.features.map(f => Number(f.properties.NAIN_r800_flood ?? f.properties.NAIN_r800 ?? 0));
-        const spec = {
-          $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-          width: "container", height: 320,
-          title: "Boat pickup points — NAIN (r=800 m) under flood",
-          data: { values: values.map(v=>({v})) },
-          mark: "bar",
-          encoding: {
-            x: { field: "v", type:"quantitative", bin:{ maxbins: 18 }, title: "NAIN (r=800 m)" },
-            y: { aggregate: "count", title: "Count" }
-          }
-        };
-        vegaEmbed("#chart", spec, {actions:false});
-      }
-      if(kind==="boats-compare"){
-        const norm = G.boats.features.map(f => ({ label:"Normal", v:Number(f.properties.NAIN_r800_normal ?? 0) }));
-        const floo = G.boats.features.map(f => ({ label:"Flood",  v:Number(f.properties.NAIN_r800_flood ?? 0) }));
-        const spec = {
-          $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-          width: "container", height: 320,
-          title: "Boat points — Normal vs Flood (NAIN r=800)",
-          data: { values: [...norm, ...floo] },
-          mark: "area",
-          encoding: {
-            x: { field: "v", type:"quantitative", bin:{maxbins:24}, title:"NAIN (r=800)" },
-            y: { aggregate: "count", title:"Count", stack: null },
-            color: { field: "label", type:"nominal" }
-          }
-        };
-        vegaEmbed("#chart", spec, {actions:false});
-      }
-      if(kind==="shelters"){
-        // Expect shelters points with distance band (10,50,100,200,400). If you only have dist_m, we compute bands on the fly:
-        const vals = G.shelters.features.map(f => {
-          const d = Number(f.properties.dist_m ?? 9999);
-          const band = d<=10 ? "≤10 m" : d<=50 ? "≤50 m" : d<=100 ? "≤100 m" : d<=200 ? "≤200 m" : d<=400 ? "≤400 m" : ">400 m";
-          return { band };
-        });
-        const spec = {
-          $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-          width: "container", height: 320,
-          title: "Shelter reach bands under flood",
-          data: { values: vals },
-          mark: "bar",
-          encoding: {
-            x: { field: "band", type:"nominal", sort:["≤10 m","≤50 m","≤100 m","≤200 m","≤400 m",">400 m"], title:"Distance band" },
-            y: { aggregate:"count", title:"Count of locations" }
-          }
-        };
-        vegaEmbed("#chart", spec, {actions:false});
-      }
-    }
-
-    function handleChartStep(step){
-      const kind = step.dataset.chart;
-      if(kind) drawChart(kind);
-    }
-
-    // ---------- OBSERVERS ----------
-    function makeObserver(containerSel, onEnter){
-      const steps = qsa(".step", qs(containerSel));
-      const io = new IntersectionObserver((entries)=>{
-        entries.forEach(e=>{
-          if(e.isIntersecting && e.intersectionRatio>0.5){
-            steps.forEach(s=>s.classList.remove("active"));
-            e.target.classList.add("active");
-            onEnter(e.target);
-          }
-        });
-      }, { root:null, threshold:[0.5] });
-      steps.forEach(s=>io.observe(s));
-    }
-
-    // ---------- BOOT ----------
-    (async function boot(){
-      await loadData();
-      map.on("load", addLayers);
-
-      makeObserver("#scrolly-map", handleMapStep);
-      makeObserver("#scrolly-charts", handleChartStep);
-
-      // initial chart
-      drawChart("boats");
-    })();
-  </script>
 </body>
-</html>
+
+<!-- Imagen centrada -->
+<center>
+  <img src="01.chennai.webp" alt="Mapa de inundaciones en Chennai" width="48%">
+ <div class="source">
+     <p class="deck">
+      Flood waters swill around apartment blocks in Chennai on 18 November 2015. Photograph: STR/AFP/Getty. <em>Source: The Guardian</em>
+     </p>
+</div>
+
+</center>
+
+<!----- Methodology----->
+
+      <div class="byline">
+        METHODOLOGY
+      </div>
+
+<!-- ===== Diagrama de tu estudio (stages 1–4) ===== -->
+
+<!-- Imagen centrada -->
+
+
+<center>
+  <img src="chennai_project2.png" alt="Mapa de crecimiento urbano en Chennai" width="100%">
+ <div class="source">
+     <p class="deck">
+      Growth of urban area in Chennai from 1973 to 2018.
+     </p>
+</div>
+</center>
+
+
+
+
+
+
